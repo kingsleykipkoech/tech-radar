@@ -1,0 +1,21 @@
+{
+  "name": "tech-radar",
+  "version": "1.0.0",
+  "description": "Open Source Tech Radar & Package Health Explorer - ALU Summative Project",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "keywords": [
+    "open-source",
+    "tech-radar",
+    "npm",
+    "pypi",
+    "github",
+    "alu",
+    "api"
+  ],
+  "author": "Kingsley Kipkoech <k.kipkoech@alustudent.com>",
+  "license": "MIT"
+}

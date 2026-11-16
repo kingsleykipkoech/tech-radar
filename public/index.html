@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Open Source Tech Radar — Package Health & Ecosystem Explorer</title>
+  <meta name="description" content="Audit, compare, and analyze open-source packages across npm and PyPI ecosystems with live health metrics and download trends.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+  <!-- Top Navigation & Cluster Status Header -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand">
+        <div class="brand-logo">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
+            <path d="M2 12h20"></path>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1>Tech Radar <span class="badge-tag">OSS Health</span></h1>
+          <p class="subtitle">Multi-Ecosystem Open Source Intelligence</p>
+        </div>
+      </div>
+
+      <div class="header-meta">
+        <div class="cluster-badge" id="clusterStatusBadge" title="Server handling your current request">
+          <span class="status-indicator"></span>
+          <span class="server-label">Node: <strong id="serverHostname">Checking...</strong></span>
+        </div>
+        <a href="https://github.com/kingsleykipkoech" target="_blank" rel="noopener" class="author-badge">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          <span>Kingsley Kipkoech</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Application Body -->
+  <main class="main-container">
+    
+    <!-- Hero / Search Section -->
+    <section class="search-section">
+      <div class="search-hero">
+        <h2>Evaluate Open Source Packages in Seconds</h2>
+        <p>Inspect real-time download velocity, GitHub issue debt, license risks, and algorithmic maintenance scores across npm & PyPI.</p>
+      </div>
+
+      <form id="searchForm" class="search-bar-form" autocomplete="off">
+        <div class="search-input-wrapper">
+          <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.3-4.3"></path>
+          </svg>
+          <input type="text" id="searchInput" placeholder="Search by package name or topic (e.g. express, fastapi, zustand, tailwind)..." autofocus required>
+          <button type="submit" class="search-submit-btn" id="searchSubmitBtn">
+            <span>Analyze</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14"></path>
+              <path d="m12 5 7 7-7 7"></path>
+            </svg>
+          </button>
+        </div>
+      </form>
+
+      <!-- Quick Exploration Pills -->
+      <div class="quick-tags">
+        <span class="quick-label">Trending:</span>
+        <div class="quick-pill-list" id="quickPillList">
+          <button type="button" class="quick-pill" data-pkg="express">express</button>
+          <button type="button" class="quick-pill" data-pkg="fastapi">fastapi</button>
+          <button type="button" class="quick-pill" data-pkg="react">react</button>
+          <button type="button" class="quick-pill" data-pkg="requests">requests</button>
+          <button type="button" class="quick-pill" data-pkg="zustand">zustand</button>
+          <button type="button" class="quick-pill" data-pkg="tailwind">tailwind</button>
+          <button type="button" class="quick-pill" data-pkg="flask">flask</button>
+          <button type="button" class="quick-pill" data-pkg="pydantic">pydantic</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Controls Bar: Filter & Sort -->
+    <section class="controls-section" id="controlsSection">
+      <div class="controls-container">
+        
+        <!-- Filter Controls -->
+        <div class="control-group">
+          <span class="control-label">Ecosystem:</span>
+          <div class="segmented-control" id="ecosystemFilter">
+            <button type="button" class="segmented-btn active" data-val="all">All</button>
+            <button type="button" class="segmented-btn" data-val="npm">npm (Node)</button>
+            <button type="button" class="segmented-btn" data-val="pypi">PyPI (Python)</button>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <span class="control-label">License:</span>
+          <select id="licenseFilter" class="custom-select">
+            <option value="all">All Licenses</option>
+            <option value="permissive">Permissive (MIT, Apache, BSD)</option>
+            <option value="copyleft">Copyleft (GPL, AGPL)</option>
+          </select>
+        </div>
+
+        <!-- Sort Controls -->
+        <div class="control-group">
+          <span class="control-label">Sort By:</span>
+          <select id="sortBy" class="custom-select">
+            <option value="relevance">Default Match</option>
+            <option value="downloads">30-Day Downloads (High to Low)</option>
+            <option value="stars">GitHub Stars (High to Low)</option>
+            <option value="health">Health Score (Highest First)</option>
+            <option value="updated">Recently Updated</option>
+            <option value="issues">Fewest Open Issues</option>
+          </select>
+        </div>
+
+        <div class="results-count-badge" id="resultsCount">
+          0 packages
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Results Grid / List -->
+    <section class="results-section">
+      <div id="loadingIndicator" class="loading-state hidden">
+        <div class="radar-spinner"></div>
+        <p>Scanning ecosystem registries & fetching GitHub intelligence...</p>
+      </div>
+
+      <div id="emptyState" class="empty-state">
+        <div class="empty-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="m21 21-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0z"></path>
+          </svg>
+        </div>
+        <h3>No packages analyzed yet</h3>
+        <p>Type a package name above or click one of the trending tags to inspect its code health, downloads, and license.</p>
+      </div>
+
+      <div id="resultsGrid" class="results-grid"></div>
+    </section>
+
+  </main>
+
+  <!-- Detailed Package Inspection Modal -->
+  <div id="detailsModal" class="modal-backdrop hidden">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <h2 id="modalPkgName">Package Name</h2>
+          <span class="modal-version-badge" id="modalPkgVersion">v1.0.0</span>
+          <span class="modal-eco-badge" id="modalPkgEco">npm</span>
+        </div>
+        <button type="button" class="modal-close-btn" id="modalCloseBtn" aria-label="Close modal">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 6 6 18"></path>
+            <path d="m6 6 12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-body" id="modalBody">
+        <!-- Dynamically injected deep dive details & sparkline chart -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="footer-container">
+      <p>ALU Summative Assignment: <strong>Playing Around with APIs</strong> • Built by Kingsley Kipkoech</p>
+      <div class="footer-credits">
+        <span>Powered by: <strong>GitHub REST API</strong> • <strong>npm Registry API</strong> • <strong>PyPI JSON API</strong></span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>
